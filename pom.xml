@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.touch.air.mall</groupId>
+    <artifactId>touch-air-mall</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>touch-air-mall</name>
+    <description>聚合</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>mall-product</module>
+        <module>mall-order</module>
+        <module>mall-coupon</module>
+        <module>mall-member</module>
+        <module>mall-ware</module>
+    </modules>
+</project>
