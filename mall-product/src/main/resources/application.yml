@@ -4,7 +4,12 @@ spring:
     password: 123456
     url: jdbc:mysql://192.168.83.133:3306/touch_air_mall_pms
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.83.133:8848
+  application:
+    name: touch-air-mall-product
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
@@ -13,4 +18,4 @@ mybatis-plus:
       id-type: auto
 
 server:
-  port: 10000
+  port: 12000

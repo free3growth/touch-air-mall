@@ -4,6 +4,12 @@ spring:
     password: 123456
     url: jdbc:mysql://192.168.83.133:3306/touch_air_mall_sms
     driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.83.133:8848
+  application:
+    name: touch-air-mall-coupon
 
 
 mybatis-plus:
