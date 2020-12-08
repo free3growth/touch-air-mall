@@ -9,6 +9,13 @@
     <description>聚合</description>
     <packaging>pom</packaging>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.4.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <modules>
         <module>mall-product</module>
         <module>mall-order</module>
@@ -19,4 +26,9 @@
         <module>renren-generator</module>
         <module>mall-common</module>
     </modules>
+
+    <properties>
+    <java.version>1.8</java.version>
+    </properties>
+
 </project>

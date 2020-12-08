@@ -1,19 +1,15 @@
 package com.touch.air.mall.member.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.touch.air.mall.member.entity.MemberEntity;
-import com.touch.air.mall.member.service.MemberService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.R;
+import com.touch.air.mall.member.entity.MemberEntity;
+import com.touch.air.mall.member.feign.CouponsFeignService;
+import com.touch.air.mall.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -29,6 +25,17 @@ import com.touch.air.common.utils.R;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private CouponsFeignService couponsFeignService;
+
+    @RequestMapping("/coupons")
+    public R test(){
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setNickname("用户z3");
+        R coupons = couponsFeignService.memberCoupons();
+        return R.ok().put("member", memberEntity).put("coupons", coupons.get("coupons"));
+
+    }
 
     /**
      * 列表
