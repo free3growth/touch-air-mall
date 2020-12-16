@@ -16,6 +16,12 @@ spring:
             - Path= /api/product/**
           filters:
             - RewritePath= /api/(?<segment>/?.*),/$\{segment}
+        - id: third_part_route
+          uri: lb://touch-air-mall-third-part
+          predicates:
+            - Path= /api/thirdpart/**
+          filters:
+            - RewritePath= /api/thirdpart/(?<segment>/?.*),/$\{segment}
         - id: admin_route
           uri: lb://renren-fast
           predicates:

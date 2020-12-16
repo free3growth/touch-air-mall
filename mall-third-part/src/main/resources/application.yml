@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.83.133:8848
+  application:
+    name: touch-air-mall-third-part
+server:
+  port: 30000
+
