@@ -40,7 +40,13 @@ public class MallProductExceptionControllerAdvice {
 
     @ExceptionHandler(value = Throwable.class)
     public R handleException(Throwable throwable) {
-        return R.error(BizCodeEnum.UNKNOWN_EXCEPTION.getCode(), BizCodeEnum.UNKNOWN_EXCEPTION.getMsg());
+        return R.error(throwable.getMessage());
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public R handleException(Exception e) {
+        log.error(e.getMessage(), e);
+        return R.error("未知异常："+e.getMessage());
     }
 
 }

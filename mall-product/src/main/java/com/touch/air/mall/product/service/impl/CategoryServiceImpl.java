@@ -10,8 +10,7 @@ import com.touch.air.mall.product.entity.CategoryEntity;
 import com.touch.air.mall.product.service.CategoryService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -58,6 +57,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         baseMapper.deleteBatchIds(asList);
 
     }
+
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId, paths);
+        Collections.reverse(parentPath);
+
+        return (Long[]) parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    private List<Long> findParentPath(Long catelogId,List<Long> paths){
+        //找父id并收集
+        paths.add(catelogId);
+        CategoryEntity categoryEntity = this.getById(catelogId);
+        if (categoryEntity.getParentCid()!=0){
+            findParentPath(categoryEntity.getParentCid(), paths);
+        }
+        return paths;
+    }
+
 
     /**
      * 递归查找所有菜单的子菜单
