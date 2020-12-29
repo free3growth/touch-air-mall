@@ -3,7 +3,9 @@ package com.touch.air.mall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.product.entity.AttrAttrgroupRelationEntity;
+import com.touch.air.mall.product.vo.AttrGroupRelationVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,8 @@ import java.util.Map;
 public interface AttrAttrgroupRelationService extends IService<AttrAttrgroupRelationEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+
+    void addBatch(List<AttrGroupRelationVO> attrGroupRelationVOS);
 }
 

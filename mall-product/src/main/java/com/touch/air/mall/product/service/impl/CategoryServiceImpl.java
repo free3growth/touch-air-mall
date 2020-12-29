@@ -7,9 +7,12 @@ import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.Query;
 import com.touch.air.mall.product.dao.CategoryDao;
 import com.touch.air.mall.product.entity.CategoryEntity;
+import com.touch.air.mall.product.service.CategoryBrandRelationService;
 import com.touch.air.mall.product.service.CategoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,6 +22,9 @@ import java.util.stream.Collectors;
  */
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Resource
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -52,7 +58,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     @Override
     public void removeMenusByIds(List<Long> asList) {
         //TODO 1、检查当前删除的菜单，是否被别的地方引用
-
         //逻辑删除
         baseMapper.deleteBatchIds(asList);
 
@@ -65,6 +70,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         Collections.reverse(parentPath);
 
         return (Long[]) parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
     }
 
     private List<Long> findParentPath(Long catelogId,List<Long> paths){

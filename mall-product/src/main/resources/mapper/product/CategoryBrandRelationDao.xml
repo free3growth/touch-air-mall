@@ -11,6 +11,9 @@
         <result property="brandName" column="brand_name"/>
         <result property="catelogName" column="catelog_name"/>
     </resultMap>
+    <update id="updateCategory">
+        UPDATE `touch_air_mall_pms`.`pms_category_brand_relation` SET  `catelog_name` = #{name} WHERE `catelog_id` = #{catId};
+    </update>
 
 
 </mapper>
