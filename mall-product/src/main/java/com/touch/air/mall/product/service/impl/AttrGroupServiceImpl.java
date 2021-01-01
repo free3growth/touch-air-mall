@@ -8,9 +8,12 @@ import com.touch.air.common.utils.Query;
 import com.touch.air.mall.product.dao.AttrAttrgroupRelationDao;
 import com.touch.air.mall.product.dao.AttrGroupDao;
 import com.touch.air.mall.product.entity.AttrAttrgroupRelationEntity;
+import com.touch.air.mall.product.entity.AttrEntity;
 import com.touch.air.mall.product.entity.AttrGroupEntity;
 import com.touch.air.mall.product.service.AttrGroupService;
+import com.touch.air.mall.product.service.AttrService;
 import com.touch.air.mall.product.vo.AttrGroupRelationVO;
+import com.touch.air.mall.product.vo.AttrGroupWithAttrsVO;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,9 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Resource
     private AttrAttrgroupRelationDao attrAttrgroupRelationDao;
+
+    @Resource
+    private AttrService attrService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -67,6 +73,25 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
         attrAttrgroupRelationDao.deleteBatchRelation(collect);
     }
 
+    /**
+     * 根据三级分类ID 查出当前分类下所有分组以及各分组带的属性
+     * @param catelog
+     * @return
+     */
+    @Override
+    public List<AttrGroupWithAttrsVO> getAttrGroupWithAttrsByCatelogId(Long catelog) {
+        //查询分组信息
+        List<AttrGroupEntity> attrGroupEntityList = this.list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelog));
+        //2.查询所有属性
+        List<AttrGroupWithAttrsVO> attrGroupWithAttrsVOS = attrGroupEntityList.stream().map(attrGroupEntity -> {
+            AttrGroupWithAttrsVO attrGroupWithAttrsVO = new AttrGroupWithAttrsVO();
+            BeanUtils.copyProperties(attrGroupEntity, attrGroupWithAttrsVO);
+            List<AttrEntity> relationAttr = attrService.getRelationAttr(attrGroupEntity.getAttrGroupId());
+            attrGroupWithAttrsVO.setAttrs(relationAttr);
+            return attrGroupWithAttrsVO;
+        }).collect(Collectors.toList());
+        return attrGroupWithAttrsVOS;
+    }
 
 
 }

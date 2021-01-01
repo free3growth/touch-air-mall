@@ -12,11 +12,14 @@ import com.touch.air.mall.product.dao.CategoryDao;
 import com.touch.air.mall.product.entity.BrandEntity;
 import com.touch.air.mall.product.entity.CategoryBrandRelationEntity;
 import com.touch.air.mall.product.entity.CategoryEntity;
+import com.touch.air.mall.product.service.BrandService;
 import com.touch.air.mall.product.service.CategoryBrandRelationService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("categoryBrandRelationService")
@@ -27,6 +30,12 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
 
     @Resource
     private CategoryDao categoryDao;
+
+    @Resource
+    private CategoryBrandRelationDao categoryBrandRelationDao;
+
+    @Resource
+    private BrandService brandService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -61,6 +70,17 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     @Override
     public void updateCategory(Long catId, String name) {
         this.baseMapper.updateCategory(catId, name);
+    }
+
+    @Override
+    public List<BrandEntity> getBrandByCatId(Long catId) {
+        List<CategoryBrandRelationEntity> list = categoryBrandRelationDao.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
+        List<BrandEntity> collect = list.stream().map(item -> {
+            Long brandId = item.getBrandId();
+            BrandEntity brandEntity = brandService.getById(brandId);
+            return brandEntity;
+        }).collect(Collectors.toList());
+        return collect;
     }
 
 }

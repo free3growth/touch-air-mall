@@ -9,6 +9,7 @@ import com.touch.air.mall.product.service.AttrGroupService;
 import com.touch.air.mall.product.service.AttrService;
 import com.touch.air.mall.product.service.CategoryService;
 import com.touch.air.mall.product.vo.AttrGroupRelationVO;
+import com.touch.air.mall.product.vo.AttrGroupWithAttrsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,14 @@ public class AttrGroupController {
     @Autowired
     private AttrAttrgroupRelationService attrgroupRelationService;
 
+
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long catelog) {
+        //1、查出当前分类下的所有属性分组
+        //2. 查出每个属性分组的所有属性
+        List<AttrGroupWithAttrsVO> vos = attrGroupService.getAttrGroupWithAttrsByCatelogId(catelog);
+        return R.ok().put("data", vos);
+    }
 
     /**
      * 新增分组与属性的关联关系

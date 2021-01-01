@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.product.entity.AttrGroupEntity;
 import com.touch.air.mall.product.vo.AttrGroupRelationVO;
+import com.touch.air.mall.product.vo.AttrGroupWithAttrsVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,5 +27,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
      * @param attrGroupRelationVOS
      */
     void deleteRelation(AttrGroupRelationVO[] attrGroupRelationVOS);
+
+    List<AttrGroupWithAttrsVO> getAttrGroupWithAttrsByCatelogId(Long catelog);
 }
 

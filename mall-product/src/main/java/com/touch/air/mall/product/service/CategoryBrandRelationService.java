@@ -2,8 +2,10 @@ package com.touch.air.mall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.touch.air.common.utils.PageUtils;
+import com.touch.air.mall.product.entity.BrandEntity;
 import com.touch.air.mall.product.entity.CategoryBrandRelationEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,5 +33,7 @@ public interface CategoryBrandRelationService extends IService<CategoryBrandRela
      * @param name
      */
     void updateCategory(Long catId, String name);
+
+    List<BrandEntity> getBrandByCatId(Long catId);
 }
 

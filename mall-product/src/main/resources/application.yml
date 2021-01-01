@@ -8,13 +8,15 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
-    alicloud:
-      access-key: LTAI4GDNygty37irjb6t8Nrm
-      secret-key: gfgG6dtUTuvktTqKc4BlQihpNuZbOa
-      oss:
-        endpoint: oss-cn-hangzhou.aliyuncs.com
+#    alicloud:
+#      access-key: LTAI4GDNygty37irjb6t8Nrm
+#      secret-key: gfgG6dtUTuvktTqKc4BlQihpNuZbOa
+#      oss:
+#        endpoint: oss-cn-hangzhou.aliyuncs.com
   application:
     name: touch-air-mall-product
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
@@ -27,4 +29,3 @@ mybatis-plus:
       logic-not-delete-value: 0
 server:
   port: 12000
-
