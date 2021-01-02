@@ -10,8 +10,6 @@ spring:
         server-addr: 192.168.83.133:8848
   application:
     name: touch-air-mall-product
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
@@ -24,3 +22,4 @@ mybatis-plus:
       logic-not-delete-value: 0
 server:
   port: 12000
+
