@@ -8,11 +8,6 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
-#    alicloud:
-#      access-key: LTAI4GDNygty37irjb6t8Nrm
-#      secret-key: gfgG6dtUTuvktTqKc4BlQihpNuZbOa
-#      oss:
-#        endpoint: oss-cn-hangzhou.aliyuncs.com
   application:
     name: touch-air-mall-product
   jackson:

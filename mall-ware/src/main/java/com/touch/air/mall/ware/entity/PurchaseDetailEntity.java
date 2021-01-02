@@ -2,11 +2,10 @@ package com.touch.air.mall.ware.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.math.BigDecimal;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 
@@ -23,7 +22,7 @@ public class PurchaseDetailEntity implements Serializable {
 	/**
 	 * 
 	 */
-	@TableId
+	@TableId()
 	private Long id;
 	/**
 	 * 采购单id
