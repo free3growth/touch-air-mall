@@ -12,11 +12,13 @@ import com.touch.air.mall.ware.dao.WareSkuDao;
 import com.touch.air.mall.ware.entity.WareSkuEntity;
 import com.touch.air.mall.ware.feign.ProductFeignService;
 import com.touch.air.mall.ware.service.WareSkuService;
+import com.touch.air.mall.ware.vo.SkuHasStockVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service("wareSkuService")
@@ -70,6 +72,19 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             }
             this.baseMapper.insert(wareSkuEntity);
         }
+    }
+
+    @Override
+    public List<SkuHasStockVo> getSkusHasStock(List<Long> skuIds) {
+        List<SkuHasStockVo> collect = skuIds.stream().map(id -> {
+            SkuHasStockVo skuHasStockVo = new SkuHasStockVo();
+            //查询当前库存总量  库存-锁定的数量
+            Long count = this.baseMapper.getSkuStock(id);
+            skuHasStockVo.setSkuId(id);
+            skuHasStockVo.setHasStock(count == null ? false : count > 0);
+            return skuHasStockVo;
+        }).collect(Collectors.toList());
+        return collect;
     }
 
 }

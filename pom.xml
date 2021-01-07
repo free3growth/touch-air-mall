@@ -26,6 +26,7 @@
         <module>renren-generator</module>
         <module>mall-common</module>
         <module>mall-third-part</module>
+        <module>mall-search</module>
     </modules>
 
     <!--统一管理jar包和版本-->

@@ -10,6 +10,10 @@ spring:
         server-addr: 192.168.83.133:8848
   application:
     name: touch-air-mall-order
+  # jackson时间格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
 
 
 mybatis-plus:

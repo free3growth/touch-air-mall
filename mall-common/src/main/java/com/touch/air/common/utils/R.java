@@ -8,6 +8,8 @@
 
 package com.touch.air.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import org.apache.http.HttpStatus;
 
 import java.util.HashMap;
@@ -20,12 +22,33 @@ import java.util.Map;
  */
 public class R extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
-	
+
+
+	public R setData(Object data) {
+		put("data", data);
+		return this;
+	}
+
+	public <T> T getData(TypeReference<T> tTypeReference) {
+		return this.getData("data", tTypeReference);
+	}
+
+	/**
+	 * 利用fastjson 进行逆转
+	 */
+	public <T> T getData(String key, TypeReference<T> tTypeReference) {
+		//默认是map
+		Object data = this.get(key);
+		String toJSONString = JSON.toJSONString(data);
+		T t = JSON.parseObject(toJSONString, tTypeReference);
+		return t;
+	}
+
 	public R() {
 		put("code", 0);
 		put("msg", "success");
 	}
-	
+
 	public static R error() {
 		return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
 	}
