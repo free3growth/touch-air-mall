@@ -1,5 +1,6 @@
 package com.touch.air.mall.product.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,7 @@ import com.touch.air.mall.product.dao.CategoryDao;
 import com.touch.air.mall.product.entity.CategoryEntity;
 import com.touch.air.mall.product.service.CategoryBrandRelationService;
 import com.touch.air.mall.product.service.CategoryService;
+import com.touch.air.mall.product.vo.Catalog2Vo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,6 +79,43 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public void updateCascade(CategoryEntity category) {
         this.updateById(category);
         categoryBrandRelationService.updateCategory(category.getCatId(),category.getName());
+    }
+
+    @Override
+    public List<CategoryEntity> getFirstLevelCategroys() {
+        List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+        return categoryEntities;
+    }
+
+    /**
+     * 首页分类 渲染二级、三级分类的数据
+     * @return
+     */
+    @Override
+    public Map<String, List<Catalog2Vo>> getCatalogJson() {
+        //1、查出所有1级分类
+        List<CategoryEntity> firstLevelCategroys = getFirstLevelCategroys();
+        //2、封装数据
+        Map<String, List<Catalog2Vo>> map = firstLevelCategroys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), item -> {
+            //2.1、查到这个一级分类下的所有二级分类
+            List<CategoryEntity> category2Entities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", item.getCatId()));
+            List<Catalog2Vo> catalog2Vos = null;
+            if (CollUtil.isNotEmpty(category2Entities)) {
+                catalog2Vos = category2Entities.stream().map(categoryEntity2 -> {
+                    Catalog2Vo catalog2Vo = new Catalog2Vo(item.getCatId().toString(), null, categoryEntity2.getName(), categoryEntity2.getCatId().toString());
+                    //2.2、查找当前二级分类下的三级分类
+                    List<CategoryEntity> category3Entities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", categoryEntity2.getCatId()));
+                    List<Catalog2Vo.Catalog3Vo> catalog3VoList = category3Entities.stream().map(categoryEntity3 -> {
+                        Catalog2Vo.Catalog3Vo catalog3Vo = new Catalog2Vo.Catalog3Vo(categoryEntity2.getCatId().toString(), categoryEntity3.getName(), categoryEntity3.getCatId().toString());
+                        return catalog3Vo;
+                    }).collect(Collectors.toList());
+                    catalog2Vo.setCatalog3List(catalog3VoList);
+                    return catalog2Vo;
+                }).collect(Collectors.toList());
+            }
+            return catalog2Vos;
+        }));
+        return map;
     }
 
     private List<Long> findParentPath(Long catelogId,List<Long> paths){

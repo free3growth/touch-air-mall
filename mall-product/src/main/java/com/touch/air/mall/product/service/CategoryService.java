@@ -3,6 +3,7 @@ package com.touch.air.mall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.product.entity.CategoryEntity;
+import com.touch.air.mall.product.vo.Catalog2Vo;
 
 import java.util.List;
 import java.util.Map;
@@ -43,5 +44,9 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @param category
      */
     void updateCascade(CategoryEntity category);
+
+    List<CategoryEntity> getFirstLevelCategroys();
+
+    Map<String, List<Catalog2Vo>> getCatalogJson();
 }
 

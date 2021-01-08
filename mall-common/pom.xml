@@ -24,7 +24,6 @@
         <druid.version>1.1.13</druid.version>
         <quartz.version>2.3.0</quartz.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <commons.fileupload.version>1.2.2</commons.fileupload.version>
         <commons.io.version>2.5</commons.io.version>
         <commons.codec.version>1.10</commons.codec.version>
         <commons.configuration.version>1.10</commons.configuration.version>
@@ -82,11 +81,11 @@
             <artifactId>commons-lang</artifactId>
             <version>${commons.lang.version}</version>
         </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${commons.fileupload.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>commons-fileupload</groupId>-->
+<!--            <artifactId>commons-fileupload</artifactId>-->
+<!--            <version>${commons.fileupload.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
