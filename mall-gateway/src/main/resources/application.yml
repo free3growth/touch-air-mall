@@ -13,7 +13,7 @@ spring:
         - id: product_route
           uri: lb://touch-air-mall-product
           predicates:
-            - Path= /api/product/**
+            - Path= /api/product/**,/hello
           filters:
             - RewritePath= /api/(?<segment>/?.*),/$\{segment}
         - id: ware_route

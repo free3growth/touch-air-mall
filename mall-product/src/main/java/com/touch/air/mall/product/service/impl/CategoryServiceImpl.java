@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -83,7 +86,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public List<CategoryEntity> getFirstLevelCategroys() {
+        long start = System.currentTimeMillis();
         List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+        System.out.println("消耗时间："+(System.currentTimeMillis()-start));
         return categoryEntities;
     }
 
@@ -93,18 +98,23 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      */
     @Override
     public Map<String, List<Catalog2Vo>> getCatalogJson() {
+        /**
+         * 1、将数据库的多次查询变为一次
+         */
+        List<CategoryEntity> selectList = baseMapper.selectList(null);
+
         //1、查出所有1级分类
-        List<CategoryEntity> firstLevelCategroys = getFirstLevelCategroys();
+        List<CategoryEntity> firstLevelCategroys = getParent_cid(selectList,0L);
         //2、封装数据
         Map<String, List<Catalog2Vo>> map = firstLevelCategroys.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), item -> {
             //2.1、查到这个一级分类下的所有二级分类
-            List<CategoryEntity> category2Entities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", item.getCatId()));
+            List<CategoryEntity> category2Entities = getParent_cid(selectList,item.getCatId());
             List<Catalog2Vo> catalog2Vos = null;
             if (CollUtil.isNotEmpty(category2Entities)) {
                 catalog2Vos = category2Entities.stream().map(categoryEntity2 -> {
                     Catalog2Vo catalog2Vo = new Catalog2Vo(item.getCatId().toString(), null, categoryEntity2.getName(), categoryEntity2.getCatId().toString());
                     //2.2、查找当前二级分类下的三级分类
-                    List<CategoryEntity> category3Entities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", categoryEntity2.getCatId()));
+                    List<CategoryEntity> category3Entities = getParent_cid(selectList,categoryEntity2.getCatId());
                     List<Catalog2Vo.Catalog3Vo> catalog3VoList = category3Entities.stream().map(categoryEntity3 -> {
                         Catalog2Vo.Catalog3Vo catalog3Vo = new Catalog2Vo.Catalog3Vo(categoryEntity2.getCatId().toString(), categoryEntity3.getName(), categoryEntity3.getCatId().toString());
                         return catalog3Vo;
@@ -116,6 +126,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             return catalog2Vos;
         }));
         return map;
+    }
+
+    private List<CategoryEntity> getParent_cid(List<CategoryEntity> selectList,Long parent_cid) {
+        List<CategoryEntity> collect = selectList.stream().filter(item -> item.getParentCid().equals(parent_cid)).collect(Collectors.toList());
+        return collect;
     }
 
     private List<Long> findParentPath(Long catelogId,List<Long> paths){
