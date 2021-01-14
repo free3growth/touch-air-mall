@@ -2,16 +2,26 @@ package com.touch.air.mall.product;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.redisson.api.RedissonClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.io.FileNotFoundException;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class MallProductApplicationTests {
-//    @Resource
+    //    @Resource
 //    private OSSClient ossClient;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private RedissonClient redissonClient;
 
     @Test
     void contextLoads() {
@@ -31,6 +41,20 @@ class MallProductApplicationTests {
         // 关闭OSSClient。
 //        ossClient.shutdown();
         System.out.println("上传完成");
+    }
+
+    @Test
+    public void testStringRedisTemplate() {
+        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+        //保存
+        valueOperations.set("hello", "world_" + UUID.randomUUID().toString());
+        //查询
+        System.out.println("之前保存的数据是："+valueOperations.get("hello"));
+    }
+
+    @Test
+    public void testRedisson() {
+        System.out.println(redissonClient);
     }
 
 }

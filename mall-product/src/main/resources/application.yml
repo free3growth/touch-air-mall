@@ -17,6 +17,21 @@ spring:
   thymeleaf:
     #关闭 thymeleaf 缓存
     cache: true
+  redis:
+    host: 192.168.83.133
+    port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      #key前缀 区别redis中其他非缓存数据
+#      key-prefix: CACHE_
+      #key前缀是否使用
+      use-key-prefix: true
+      #是否缓存空值，防止缓存穿透
+      cache-null-values: true
+#    cache-names:
+
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
