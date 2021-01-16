@@ -40,10 +40,14 @@ spring:
             - Path= /api/**
           filters:
             - RewritePath= /api/(?<segment>/?.*),/renren-fast/$\{segment}
-        - id: mall_host
+        - id: mall_host_route
           uri: lb://touch-air-mall-product
           predicates:
-            - Host=**.mall.com,mall.com
+            - Host=mall.com
+        - id: mall_search_route
+          uri: lb://touch-air-mall-search
+          predicates:
+            - Host=search.mall.com
 ## 前端项目请求都带有 /api 前缀
 ## http://localhost:9527/api/captcha.jpg  ---> http://renren-fast:8080/api/captcha.jpg
   ## 但是默认的请求是：http://localhost:8080/renren-fast/captcha.jpg  使用Gateway的Filter 重写路径
