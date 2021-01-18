@@ -14,7 +14,6 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ public class ProductSaveServiceImpl implements ProductSaveService {
     private RestHighLevelClient restHighLevelClient;
 
     @Override
-    public boolean productStatusUp(List<SkuEsModel> skuEsModels) throws IOException {
+    public boolean productStatusUp(List<SkuEsModel> skuEsModels) {
         //保存到es
         //1.给es中建立索引，product,建立好映射关系
 
@@ -45,14 +44,18 @@ public class ProductSaveServiceImpl implements ProductSaveService {
             indexRequest.source(JSON.toJSONString(skuEsModel), XContentType.JSON);
             bulkRequest.add(indexRequest);
         }
-        BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest, MallElasticSearchConfig.COMMON_OPTIONS);
+        BulkResponse bulkResponse = null;
+        try {
+            bulkResponse = restHighLevelClient.bulk(bulkRequest, MallElasticSearchConfig.COMMON_OPTIONS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //TODO 如果批量错误 可以后续处理
         boolean hasFailures = bulkResponse.hasFailures();
 
         List<String> collect = Arrays.stream(bulkResponse.getItems()).map(item -> {
             return item.getId();
         }).collect(Collectors.toList());
-        log.info("商品上架完成：{}：", collect);
 
         return !hasFailures;
     }

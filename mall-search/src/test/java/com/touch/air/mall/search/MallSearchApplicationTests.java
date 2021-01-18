@@ -55,9 +55,9 @@ public class MallSearchApplicationTests {
         indexRequest.id("1");
 //        indexRequest.source("username", "ZhSan", "age", 18, "gender","男");
         User user = new User();
-        user.setUserName("ZhSan");
+        user.setUserName("lisi");
         user.setGender("男");
-        user.setAge(18);
+        user.setAge(28);
         String jsonStr = JSONUtil.toJsonStr(user);
         indexRequest.source(jsonStr, XContentType.JSON);//要保存的内容
         //执行操作

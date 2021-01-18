@@ -3,6 +3,7 @@ package com.touch.air.mall.search.vo;
 import com.touch.air.common.to.es.SkuEsModel;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +44,28 @@ public class SearchResult {
      * 当前查询到的结果 所有涉及到的所有分类
      */
     private List<CatalogVo> catalogVoList;
+
+    /**
+     * 导航页码
+     */
+    private List<Integer> pageNavs;
+
+    /**
+     * 面包屑导航数据
+     */
+    private List<NavVo> navs = new ArrayList<>();
+
+    /**
+     * 已存在的筛选属性
+     */
+    private List<Long> attrIds = new ArrayList<>();
+
+    @Data
+    public static class NavVo {
+        private String navName;
+        private String navValue;
+        private String link;
+    }
 
     @Data
     public static class BrandVo {

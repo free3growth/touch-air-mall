@@ -37,9 +37,9 @@ public class SearchParam {
 
     /**
      * 过滤条件
-     *
+     * <p>
      * hasStock(是否有货)、skuPrice价格区间、brandId(品牌id 可以多选)、catalog3Id、attrs(属性)
-     *
+     * <p>
      * hasStock=0（无库存）/1（有库存）
      * skuPrice=1_500/_500/500_(1到500、500以内的、大于500的)
      * brandId=1&brandId=2
@@ -53,4 +53,9 @@ public class SearchParam {
      * 分页 页码
      */
     private Integer pageNum = 1;
+
+    /**
+     *原生的所有查询条件
+     */
+    private String _url;
 }
