@@ -5,6 +5,7 @@ import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.product.entity.AttrGroupEntity;
 import com.touch.air.mall.product.vo.AttrGroupRelationVO;
 import com.touch.air.mall.product.vo.AttrGroupWithAttrsVO;
+import com.touch.air.mall.product.vo.SpuItemGroupAttrVo;
 
 import java.util.List;
 import java.util.Map;
@@ -29,5 +30,7 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
     void deleteRelation(AttrGroupRelationVO[] attrGroupRelationVOS);
 
     List<AttrGroupWithAttrsVO> getAttrGroupWithAttrsByCatelogId(Long catelog);
+
+    List<SpuItemGroupAttrVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId);
 }
 

@@ -13,5 +13,25 @@
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
 
+    <resultMap id="skuItemSaleAttrVo" type="com.touch.air.mall.product.vo.SkuItemSaleAttrVo">
+        <result column="attrId" property="attrId"></result>
+        <result column="attrName" property="attrName"></result>
+        <collection property="attrValue" ofType="com.touch.air.mall.product.vo.AttrValueWithSkuIdVo">
+            <result column="attrValue" property="attrValue"></result>
+            <result column="skuIds" property="skuIds"></result>
+        </collection>
+    </resultMap>
+    <select id="getSaleAttrsBySpuId" resultMap="skuItemSaleAttrVo">
+        SELECT
+        pssav.attr_id attrId,
+        pssav.attr_name attrName,
+        pssav.attr_value attrValue,
+        GROUP_CONCAT(DISTINCT psi.sku_id) skuIds
+        FROM pms_sku_info psi
+        LEFT JOIN pms_sku_sale_attr_value pssav ON pssav.sku_id=psi.sku_id
+        WHERE psi.spu_id=#{spuId}
+        GROUP BY attrId,attrName,attrValue
+    </select>
+
 
 </mapper>

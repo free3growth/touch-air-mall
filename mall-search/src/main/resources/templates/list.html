@@ -1208,19 +1208,19 @@
                                     <a href="/static/search/#">关注</a>
                                 </div>
                                 <p class="da">
-                                    <a href="/static/search/#">
+                                    <a th:href="|http://item.mall.com/${product.skuId}.html|">
                                         <img th:src="${product.skuImg}" class="dim">
                                     </a>
                                 </p>
                                 <ul class="tab_im">
-                                    <li><a href="/static/search/#" title="黑色">
+                                    <li><a th:href="|http://item.mall.com/${product.skuId}.html|" title="黑色">
                                         <img th:src="${product.skuImg}"></a></li>
                                 </ul>
                                 <p class="tab_R">
                                     <span th:text="'¥'+${product.skuPrice}">¥5199.00</span>
                                 </p>
                                 <p class="tab_JE">
-                                    <a href="/static/search/#" th:utext="${product.skuTitle}">
+                                    <a th:href="|http://item.mall.com/${product.skuId}.html|" th:utext="${product.skuTitle}">
 
                                     </a>
                                 </p>

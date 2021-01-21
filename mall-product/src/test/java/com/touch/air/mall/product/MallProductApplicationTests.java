@@ -1,5 +1,9 @@
 package com.touch.air.mall.product;
 
+import com.touch.air.mall.product.dao.AttrGroupDao;
+import com.touch.air.mall.product.dao.SkuSaleAttrValueDao;
+import com.touch.air.mall.product.vo.SkuItemSaleAttrVo;
+import com.touch.air.mall.product.vo.SpuItemGroupAttrVo;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.redisson.api.RedissonClient;
@@ -10,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
@@ -22,6 +27,13 @@ class MallProductApplicationTests {
 
     @Resource
     private RedissonClient redissonClient;
+
+    @Resource
+    private AttrGroupDao attrGroupDao;
+
+    @Resource
+    private SkuSaleAttrValueDao skuSaleAttrValueDao;
+
 
     @Test
     void contextLoads() {
@@ -55,6 +67,15 @@ class MallProductApplicationTests {
     @Test
     public void testRedisson() {
         System.out.println(redissonClient);
+    }
+
+    @Test
+    public void testSkuItem() {
+        List<SpuItemGroupAttrVo> attrGroupWithAttrsBySpuId = attrGroupDao.getAttrGroupWithAttrsBySpuId(10L, 225L);
+        System.out.println(attrGroupWithAttrsBySpuId);
+        List<SkuItemSaleAttrVo> saleAttrsBySpuId = skuSaleAttrValueDao.getSaleAttrsBySpuId(2L);
+        System.out.println(saleAttrsBySpuId);
+
     }
 
 }

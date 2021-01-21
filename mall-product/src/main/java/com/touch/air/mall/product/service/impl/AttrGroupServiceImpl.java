@@ -14,6 +14,7 @@ import com.touch.air.mall.product.service.AttrGroupService;
 import com.touch.air.mall.product.service.AttrService;
 import com.touch.air.mall.product.vo.AttrGroupRelationVO;
 import com.touch.air.mall.product.vo.AttrGroupWithAttrsVO;
+import com.touch.air.mall.product.vo.SpuItemGroupAttrVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -91,6 +92,18 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
             return attrGroupWithAttrsVO;
         }).collect(Collectors.toList());
         return attrGroupWithAttrsVOS;
+    }
+
+    /**
+     * 查出当前spu对应的所有属性的分组信息，以及属性对应的值
+     * @param spuId
+     * @param catalogId
+     * @return
+     */
+    @Override
+    public List<SpuItemGroupAttrVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId) {
+        List<SpuItemGroupAttrVo> spuItemGroupAttrVoList = this.getBaseMapper().getAttrGroupWithAttrsBySpuId(spuId, catalogId);
+        return spuItemGroupAttrVoList;
     }
 
 

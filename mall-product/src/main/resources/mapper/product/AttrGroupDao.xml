@@ -3,7 +3,7 @@
 
 <mapper namespace="com.touch.air.mall.product.dao.AttrGroupDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.touch.air.mall.product.entity.AttrGroupEntity" id="attrGroupMap">
         <result property="attrGroupId" column="attr_group_id"/>
         <result property="attrGroupName" column="attr_group_name"/>
@@ -12,6 +12,30 @@
         <result property="icon" column="icon"/>
         <result property="catelogId" column="catelog_id"/>
     </resultMap>
+
+    <!--只要有嵌套结果，就需要封装自定义结果集-->
+    <resultMap id="spuItemGroupAttrVo" type="com.touch.air.mall.product.vo.SpuItemGroupAttrVo">
+        <result property="groupName" column="attr_group_name"></result>
+        <collection property="attrs" ofType="com.touch.air.mall.product.vo.SpuBaseAttrVo">
+            <result property="attrValue" column="attr_value"></result>
+            <result property="attrName" column="attr_name"></result>
+        </collection>
+    </resultMap>
+    <select id="getAttrGroupWithAttrsBySpuId"
+            resultMap="spuItemGroupAttrVo">
+        SELECT
+        ppav.spu_id,
+        pag.attr_group_name,
+        pag.attr_group_id,
+        paar.attr_id ,
+        pa.attr_name,
+        ppav.attr_value
+        FROM `pms_attr_group`  pag
+        LEFT JOIN pms_attr_attrgroup_relation paar on pag.attr_group_id=paar.attr_group_id
+        LEFT JOIN pms_attr pa ON pa.attr_id=paar.attr_id
+        LEFT JOIN pms_product_attr_value ppav ON ppav.attr_id=paar.attr_id
+        WHERE pag.catelog_id=#{catalogId} AND ppav.spu_id=#{spuId}
+    </select>
 
 
 </mapper>
