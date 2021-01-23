@@ -2,15 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>touch-air-mall</artifactId>
         <groupId>com.touch.air.mall</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mall-third-part</artifactId>
-    <description>第三方服务</description>
+    <groupId>com.touch.air.mall</groupId>
+    <artifactId>mall-auth-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>mall-auth-server</name>
+    <description>认证中心（社交登录、OAuth2.0、单点登录）</description>
+
 
     <dependencies>
         <dependency>
@@ -30,6 +34,10 @@
                     <groupId>com.alibaba</groupId>
                     <artifactId>druid-spring-boot-starter</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -41,18 +49,28 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--spring cloud alibaba oss-->
+        <!--模板引擎 thymeleaf-->
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alicloud-oss</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
+        <!--dev-tools-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!--redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

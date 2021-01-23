@@ -1,10 +1,17 @@
 spring:
+  application:
+    name: touch-air-mall-third-part
   cloud:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
-  application:
-    name: touch-air-mall-third-part
+  alicloud:
+    sms:
+      host: https://gyytz.market.alicloudapi.com
+      path: /sms/smsSend
+      appcode: xxxxxxxx
+      sms-sign-id: 2e65b1bb3d054466b82f0c9d125465e2
+      template-id: a09602b817fd47e59e7c6e603d3f088d
 server:
   port: 30000
 

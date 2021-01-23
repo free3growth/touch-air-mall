@@ -1,10 +1,16 @@
 package com.touch.air.mall.member.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.touch.air.common.exception.BizCodeEnum;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.R;
 import com.touch.air.mall.member.entity.MemberEntity;
+import com.touch.air.mall.member.exception.PhoneExistException;
+import com.touch.air.mall.member.exception.UsernameExistException;
 import com.touch.air.mall.member.feign.CouponsFeignService;
 import com.touch.air.mall.member.service.MemberService;
+import com.touch.air.mall.member.vo.MemberLoginVo;
+import com.touch.air.mall.member.vo.MemberRegisterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +42,31 @@ public class MemberController {
         return R.ok().put("member", memberEntity).put("coupons", coupons.get("coupons"));
 
     }
+
+    @PostMapping("/register")
+    public R register(@RequestBody MemberRegisterVo memberRegisterVo) {
+        try {
+            memberService.register(memberRegisterVo);
+        } catch (PhoneExistException e) {
+            return R.error(BizCodeEnum.PHONE_EXIST_EXCEPTION.getCode(), BizCodeEnum.PHONE_EXIST_EXCEPTION.getMsg());
+        } catch (UsernameExistException e) {
+            return R.error(BizCodeEnum.USER_EXIST_EXCEPTION.getCode(), BizCodeEnum.USER_EXIST_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
+
+    @PostMapping("/login")
+    public R login(@RequestBody MemberLoginVo memberRegisterVo) {
+
+        MemberEntity memberEntity = memberService.login(memberRegisterVo);
+        if (ObjectUtil.isNotNull(memberEntity)) {
+            return R.ok();
+        }else{
+            return R.error(BizCodeEnum.ACCOUNT_PASSWORD_EXCEPTION.getCode(), BizCodeEnum.ACCOUNT_PASSWORD_EXCEPTION.getMsg());
+        }
+
+    }
+
 
     /**
      * 列表

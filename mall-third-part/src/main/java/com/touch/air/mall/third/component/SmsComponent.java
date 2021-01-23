@@ -1,48 +1,39 @@
-package com.touch.air.mall.third;
+package com.touch.air.mall.third.component;
 
-import com.aliyun.oss.OSSClient;
-import com.touch.air.mall.third.component.SmsComponent;
 import com.touch.air.mall.third.util.HttpUtils;
+import lombok.Data;
 import org.apache.http.HttpResponse;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author: bin.wang
- * @date: 2020/12/16 16:33
+ * @date: 2021/1/22 14:14
  */
-@SpringBootTest
-public class MallThirdPartApplicationTest {
-    @Resource
-    private OSSClient ossClient;
-    @Value("${spring.cloud.alicloud.oss.bucket}")
-    private String bucketName;
+@Data
+@Component
+@ConfigurationProperties(prefix = "spring.alicloud.sms")
+public class SmsComponent {
 
-    @Resource
-    private SmsComponent smsComponent;
+    private String host;
+    private String path;
+    private String appcode;
+    private String smsSignId;
+    private String templateId;
 
-    /**
-     * 短信验证码测试
-     */
-    @Test
-    public void sendMsg() {
-        String host = "https://gyytz.market.alicloudapi.com";
-        String path = "/sms/smsSend";
+    public void sendCode(String phone,String code) {
         String method = "POST";
-        String appcode = "appcode";
         Map<String, String> headers = new HashMap<String, String>();
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
         headers.put("Authorization", "APPCODE " + appcode);
         Map<String, String> querys = new HashMap<String, String>();
-        querys.put("mobile", "mobile");
-        querys.put("param", "**code**:12138,**minute**:15");
-        querys.put("smsSignId", "2e65b1bb3d054466b82f0c9d125465e2");
-        querys.put("templateId", "a09602b817fd47e59e7c6e603d3f088d");
+        querys.put("mobile", phone);
+        querys.put("param", "**code**:"+code+",**minute**:15");
+        querys.put("smsSignId", smsSignId);
+        querys.put("templateId", templateId);
         Map<String, String> bodys = new HashMap<String, String>();
 
 
@@ -64,10 +55,4 @@ public class MallThirdPartApplicationTest {
             e.printStackTrace();
         }
     }
-
-    @Test
-    public void  testSendSms(){
-        smsComponent.sendCode("xxx", "54338");
-    }
-
 }

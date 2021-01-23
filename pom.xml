@@ -27,6 +27,7 @@
         <module>mall-common</module>
         <module>mall-third-part</module>
         <module>mall-search</module>
+        <module>mall-auth-server</module>
     </modules>
 
     <!--统一管理jar包和版本-->
