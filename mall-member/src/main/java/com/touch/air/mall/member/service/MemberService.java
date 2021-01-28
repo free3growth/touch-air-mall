@@ -7,6 +7,7 @@ import com.touch.air.mall.member.exception.PhoneExistException;
 import com.touch.air.mall.member.exception.UsernameExistException;
 import com.touch.air.mall.member.vo.MemberLoginVo;
 import com.touch.air.mall.member.vo.MemberRegisterVo;
+import com.touch.air.mall.member.vo.SocialUser;
 
 import java.util.Map;
 
@@ -28,5 +29,7 @@ public interface MemberService extends IService<MemberEntity> {
     void checkUsernameUnique(String username) throws UsernameExistException;
 
     MemberEntity login(MemberLoginVo memberRegisterVo);
+
+    MemberEntity oauthWeiboLogin(SocialUser socialUser);
 }
 

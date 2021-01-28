@@ -11,6 +11,7 @@ import com.touch.air.mall.member.feign.CouponsFeignService;
 import com.touch.air.mall.member.service.MemberService;
 import com.touch.air.mall.member.vo.MemberLoginVo;
 import com.touch.air.mall.member.vo.MemberRegisterVo;
+import com.touch.air.mall.member.vo.SocialUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,12 +56,24 @@ public class MemberController {
         return R.ok();
     }
 
+    @PostMapping("/oauth/weibo/login")
+    public R oauthWeiboLogin(@RequestBody SocialUser socialUser) {
+
+        MemberEntity memberEntity = memberService.oauthWeiboLogin(socialUser);
+        if (ObjectUtil.isNotNull(memberEntity)) {
+            return R.ok().setData(memberEntity);
+        }else{
+            return R.error(BizCodeEnum.ACCOUNT_PASSWORD_EXCEPTION.getCode(), BizCodeEnum.ACCOUNT_PASSWORD_EXCEPTION.getMsg());
+        }
+
+    }
+
     @PostMapping("/login")
     public R login(@RequestBody MemberLoginVo memberRegisterVo) {
 
         MemberEntity memberEntity = memberService.login(memberRegisterVo);
         if (ObjectUtil.isNotNull(memberEntity)) {
-            return R.ok();
+            return R.ok().setData(memberEntity);
         }else{
             return R.error(BizCodeEnum.ACCOUNT_PASSWORD_EXCEPTION.getCode(), BizCodeEnum.ACCOUNT_PASSWORD_EXCEPTION.getMsg());
         }

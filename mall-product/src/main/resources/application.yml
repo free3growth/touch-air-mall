@@ -30,6 +30,8 @@ spring:
       use-key-prefix: true
       #是否缓存空值，防止缓存穿透
       cache-null-values: true
+  session:
+    store-type: redis
 #    cache-names:
 
 
@@ -44,3 +46,6 @@ mybatis-plus:
       logic-not-delete-value: 0
 server:
   port: 12000
+  servlet:
+    session:
+      timeout: 30m

@@ -1,14 +1,17 @@
 package com.touch.air.mall.auth.web;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.TypeReference;
 import com.touch.air.common.constant.AuthServerConstant;
 import com.touch.air.common.exception.BizCodeEnum;
 import com.touch.air.common.utils.R;
+import com.touch.air.common.vo.MemberRespVo;
 import com.touch.air.mall.auth.feign.MemberFeignService;
 import com.touch.air.mall.auth.feign.ThirdPartFeignService;
 import com.touch.air.mall.auth.vo.UserLoginVo;
 import com.touch.air.mall.auth.vo.UserRegisterVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
  * @author: bin.wang
  * @date: 2021/1/22 09:58
  */
+@Slf4j
 @Controller
 public class LoginController {
 
@@ -48,10 +53,17 @@ public class LoginController {
      *
      * @return
      */
-    //@GetMapping({"/", "/login.html"})
-    //public String loginPage() {
-    //   return "login";
-    //}
+    @GetMapping("/login.html")
+    public String loginPage(HttpSession httpSession) {
+        Object attribute = httpSession.getAttribute(AuthServerConstant.LOGIN_USER);
+        if (ObjectUtil.isNotNull(attribute)) {
+            //已经登录过了，直接商城首页
+            return "redirect:http://mall.com/";
+        }else {
+            //去登录
+            return "login";
+        }
+    }
     //@GetMapping({ "/register.html"})
     //public String registerPage() {
     //    return "register";
@@ -131,10 +143,14 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(UserLoginVo userLoginVo,RedirectAttributes redirectAttributes) {
+    public String login(UserLoginVo userLoginVo, RedirectAttributes redirectAttributes, HttpSession httpSession) {
         //表单提交，不需要@RequestBody
         R r = memberFeignService.login(userLoginVo);
         if (r.getCode() == 0) {
+            MemberRespVo data = r.getData("data", new TypeReference<MemberRespVo>() {
+            });
+            log.info("登录的用户："+data);
+            httpSession.setAttribute(AuthServerConstant.LOGIN_USER, data);
             return "redirect:http://mall.com/";
         }else{
             Map<String, String> errors = new HashMap<>();
