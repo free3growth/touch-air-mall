@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 02/01/2021 14:00:19
+ Date: 29/01/2021 08:15:03
 */
 
 SET NAMES utf8mb4;
@@ -68,8 +68,11 @@ CREATE TABLE `ums_member`  (
   `growth` int(11) NULL DEFAULT NULL COMMENT '成长值',
   `status` tinyint(4) NULL DEFAULT NULL COMMENT '启用状态',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '注册时间',
+  `social_uid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '社交账户uid',
+  `access_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '访问令牌',
+  `expires_in` bigint(20) NULL DEFAULT NULL COMMENT '令牌过期时间(s)',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '会员' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for ums_member_collect_spu
