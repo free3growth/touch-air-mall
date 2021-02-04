@@ -1,0 +1,28 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.83.133:8848
+  application:
+    name: touch-air-mall-cart
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.83.133
+    port: 6379
+    session:
+      store-type: redis
+
+server:
+  port: 13000
+  servlet:
+    session:
+      timeout: 30m
+
+
+
+mall:
+  thread:
+    core-size: 20
+    max-size: 200
+    keep-alive-time: 10
