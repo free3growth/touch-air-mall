@@ -14,7 +14,19 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
-
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
+    host: 192.168.83.133
+    virtual-host: /
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: manual
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
