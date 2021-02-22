@@ -3,6 +3,7 @@ package com.touch.air.mall.cart.service;
 import com.touch.air.mall.cart.vo.Cart;
 import com.touch.air.mall.cart.vo.CartItem;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -23,4 +24,6 @@ public interface CartService {
     void countItem(Long skuId, Integer num);
 
     void deleteItem(Long skuId);
+
+    List<CartItem> getUserCartItems();
 }

@@ -131,13 +131,20 @@
 						</li>
 					</ul>
 					<ul class="header_ul_right">
-						<li style="border: 0;">
-							<a href="/static/order/detail/denglu.html" class="aa">你好，请登录</a>
+<!--						<li style="border: 0;">-->
+<!--							<a href="/static/order/detail/denglu.html" class="aa">你好，请登录</a>-->
+<!--						</li>-->
+<!--						<li>-->
+<!--							<a href="/static/order/detail/javascript:;" style="color: red;">免费注册</a> |</li>-->
+						<li style="width: 100px;">
+							<a href="http://auth.mall.com/login.html" th:if="${session.loginUser==null}" class="aa">你好，请登录</a>
+							<a  th:if="${session.loginUser!=null}" class="aa">欢迎：[[${session.loginUser==null?'':session.loginUser.nickname}]]</a>
+						</li>
+						<li th:if="${session.loginUser==null}" >
+							<a href="http://auth.mall.com/register.html" class="li_2">免费注册</a>
 						</li>
 						<li>
-							<a href="/static/order/detail/javascript:;" style="color: red;">免费注册</a> |</li>
-						<li>
-							<a href="/static/order/detail/javascript:;" class="aa">我的订单</a> |</li>
+							<a href="http://order.mall.com/list.html" class="aa">我的订单</a> |</li>
 						<li class="jingdong" style="width:95px;">
 							<a href="/static/order/detail/javascript:;">我的谷粒商城</a><span class="glyphicon glyphicon-menu-down">|</span>
 							<ol class="jingdong_ol">
@@ -709,7 +716,7 @@
 					</span>
 										<div class="info-rcol">
 											<span class="f-price">
-                        ¥<0 class="00"></0>
+<!--                        ¥<0 class="00"></0>-->
                     </span>
 										</div>
 									</div>
@@ -875,7 +882,7 @@
 					<div class="xuanxiangka">
 						<ul class="ul1">
 							<li >
-								<ul class="ul2" ">
+								<ul class="ul2">
 									<li>
 										<img src="/static/order/detail/image/5a0bf933N27e3b0be.jpg"/>
 										<p class="p1">展卉 泰国进口龙眼 1kg 新鲜水果</p>

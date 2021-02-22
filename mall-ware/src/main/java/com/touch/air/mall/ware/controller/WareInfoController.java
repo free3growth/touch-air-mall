@@ -1,19 +1,15 @@
 package com.touch.air.mall.ware.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.touch.air.mall.ware.entity.WareInfoEntity;
-import com.touch.air.mall.ware.service.WareInfoService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.R;
+import com.touch.air.mall.ware.entity.WareInfoEntity;
+import com.touch.air.mall.ware.service.WareInfoService;
+import com.touch.air.mall.ware.vo.FareResVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -29,6 +25,15 @@ import com.touch.air.common.utils.R;
 public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
+
+    /**
+     * 获取运费
+     */
+    @GetMapping("/fare")
+    public R getFare(@RequestParam("addrId") Long addrId) {
+        FareResVo fare = wareInfoService.getFare(addrId);
+        return R.ok().setData(fare);
+    }
 
     /**
      * 列表

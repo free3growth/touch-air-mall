@@ -204,4 +204,25 @@ public class CartServiceImpl implements CartService {
         BoundHashOperations cartOps = getCartOps();
         cartOps.delete(skuId.toString());
     }
+
+    @Override
+    public List<CartItem> getUserCartItems() {
+        UserInfoTo userInfoTo = CartInterceptor.threadLocal.get();
+        System.out.println("userInfoTo:" + userInfoTo);
+        if (userInfoTo.getUserId() == null) {
+            return null;
+        }else{
+            String redisKey = CART_PREFIX + userInfoTo.getUserId();
+            //选中的购物项
+            List<CartItem> cartCheckedItems = getCartItems(redisKey).stream()
+                    .filter(item -> item.getCheck())
+                    .map(item -> {
+                        //更新为最新价格
+                        item.setPrice(productFeignService.getPrice(item.getSkuId()));
+                        return item;
+                    })
+                    .collect(Collectors.toList());
+            return cartCheckedItems;
+        }
+    }
 }

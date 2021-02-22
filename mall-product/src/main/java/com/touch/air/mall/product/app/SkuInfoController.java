@@ -1,19 +1,15 @@
 package com.touch.air.mall.product.app;
 
-import java.util.Arrays;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.touch.air.mall.product.entity.SkuInfoEntity;
-import com.touch.air.mall.product.service.SkuInfoService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.R;
+import com.touch.air.mall.product.entity.SkuInfoEntity;
+import com.touch.air.mall.product.service.SkuInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -30,6 +26,10 @@ public class SkuInfoController {
     @Autowired
     private SkuInfoService skuInfoService;
 
+    @GetMapping("/{skuId}/price")
+    public BigDecimal getPrice(@PathVariable("skuId") Long skuId) {
+        return skuInfoService.getById(skuId).getPrice();
+    }
     /**
      * 列表
      */

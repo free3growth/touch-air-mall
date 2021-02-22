@@ -3,6 +3,7 @@ package com.touch.air.mall.ware.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.ware.entity.WareInfoEntity;
+import com.touch.air.mall.ware.vo.FareResVo;
 
 import java.util.Map;
 
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface WareInfoService extends IService<WareInfoEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    FareResVo getFare(Long addrId);
 }
 

@@ -66,7 +66,9 @@ public class Cart {
         //1、计算购物项总价
         if (CollUtil.isNotEmpty(items)) {
             for (CartItem item : items) {
-                allAmount = allAmount.add(item.getTotalPrice());
+                if (item.getCheck()) {
+                    allAmount = allAmount.add(item.getTotalPrice());
+                }
             }
         }
         //2、减除优惠
