@@ -1,10 +1,12 @@
 package com.touch.air.mall.ware.controller;
 
+import com.touch.air.common.exception.BizCodeEnum;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.R;
 import com.touch.air.mall.ware.entity.WareSkuEntity;
 import com.touch.air.mall.ware.service.WareSkuService;
 import com.touch.air.mall.ware.vo.SkuHasStockVo;
+import com.touch.air.mall.ware.vo.WareSkuLockVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,18 @@ import java.util.Map;
 public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
+
+    @PostMapping("/order/lock")
+    public R orderLock(@RequestBody WareSkuLockVo wareSkuLockVo) {
+//        List<LockStockResultVo> lockStockResultVos = wareSkuService.orderLockStock(wareSkuLockVo);
+        try {
+            wareSkuService.orderLockStock(wareSkuLockVo);
+            return R.ok();
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error(BizCodeEnum.NO_STOCK_EXCEPTION.getCode(), BizCodeEnum.NO_STOCK_EXCEPTION.getMsg());
+        }
+    }
 
     @PostMapping("/hasstock")
     public List<SkuHasStockVo> getSkusHasStock(@RequestBody List<Long> skuIds) {
