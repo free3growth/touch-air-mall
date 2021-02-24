@@ -36,7 +36,6 @@ public class WareSkuController {
             wareSkuService.orderLockStock(wareSkuLockVo);
             return R.ok();
         }catch (Exception e){
-            e.printStackTrace();
             return R.error(BizCodeEnum.NO_STOCK_EXCEPTION.getCode(), BizCodeEnum.NO_STOCK_EXCEPTION.getMsg());
         }
     }

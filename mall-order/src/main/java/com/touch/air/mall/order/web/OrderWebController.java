@@ -46,15 +46,29 @@ public class OrderWebController {
      * @return
      */
     @PostMapping("/submitOrder")
-    public String submitOrder(OrderSubmitVo orderSubmitVo) {
+    public String submitOrder(OrderSubmitVo orderSubmitVo, Model model) {
         SubmitOrderResVo submitOrderResVo = orderService.submitOrder(orderSubmitVo);
         log.info("下单返回结果集："+submitOrderResVo.toString());
         if (submitOrderResVo.getCode() == 0) {
             //下单成功来到支付选择页
+            model.addAttribute("submitOrderRes", submitOrderResVo);
             return "pay";
         }else{
+            String msg = "下单失败";
             //下单失败，回到确认页重新确认订单消息
-            return "redirect:http://order.mall.com/pay.html";
+            switch (submitOrderResVo.getCode()) {
+                case 1:
+                    msg += "：订单信息过期，请刷新后再次提交";
+                    break;
+                case 2:
+                    msg += "：订单商品价格发生变化，请确认后再次提交";
+                    break;
+                case 3:
+                    msg += "：商品库存不足";
+                    break;
+            }
+            log.info(msg);
+            return "redirect:http://order.mall.com/toTrade";
         }
     }
 }
