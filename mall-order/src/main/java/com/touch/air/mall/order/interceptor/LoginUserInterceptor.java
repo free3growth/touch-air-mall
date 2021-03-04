@@ -3,6 +3,7 @@ package com.touch.air.mall.order.interceptor;
 import cn.hutool.core.util.ObjectUtil;
 import com.touch.air.common.constant.AuthServerConstant;
 import com.touch.air.common.vo.MemberRespVo;
+import org.apache.shiro.util.AntPathMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -20,6 +21,11 @@ public class LoginUserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //如果是远程调用 直接放行
+        boolean match = new AntPathMatcher().match("/order/order/status/**", request.getRequestURI());
+        if (match) {
+            return true;
+        }
         MemberRespVo attribute = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
         if (ObjectUtil.isNotNull(attribute)) {
             //同一个线程 threadLocal 共享数据

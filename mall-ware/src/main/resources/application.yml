@@ -13,7 +13,15 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
+    host: 192.168.83.133
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
@@ -24,3 +32,19 @@ mybatis-plus:
 
 server:
   port: 11000
+
+seata:
+  #是否开启spring-boot 自动装配
+  enabled: true
+  #自定义事务组名称
+  tx-service-group: order-mall-group
+  #是否开启数据源自动代理
+  enable-auto-data-source-proxy: true
+  service:
+    vgroupMapping:
+      order-mall-group: default
+    grouplist:
+      #服务器上seata的地址
+      default: localhost:8091
+    enable-degrade: false
+  application-id: ${spring.application.name}

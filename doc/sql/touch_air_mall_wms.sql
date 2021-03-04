@@ -11,11 +11,29 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 02/01/2021 14:00:27
+ Date: 04/03/2021 08:19:55
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for undo_log
+-- ----------------------------
+DROP TABLE IF EXISTS `undo_log`;
+CREATE TABLE `undo_log`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(20) NOT NULL,
+  `xid` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `context` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(11) NOT NULL,
+  `log_created` datetime(0) NOT NULL,
+  `log_modified` datetime(0) NOT NULL,
+  `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for wms_purchase
@@ -36,12 +54,6 @@ CREATE TABLE `wms_purchase`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '采购信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of wms_purchase
--- ----------------------------
-INSERT INTO `wms_purchase` VALUES (1, 2, 'touchair', '19953258747', 1, 1, NULL, NULL, NULL, NULL);
-INSERT INTO `wms_purchase` VALUES (2, 1, 'admin', '13612345678', NULL, 4, NULL, NULL, '2021-01-02 03:04:36', '2021-01-02 04:22:55');
-
--- ----------------------------
 -- Table structure for wms_purchase_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `wms_purchase_detail`;
@@ -54,13 +66,7 @@ CREATE TABLE `wms_purchase_detail`  (
   `ware_id` bigint(20) NULL DEFAULT NULL COMMENT '仓库id',
   `status` int(11) NULL DEFAULT NULL COMMENT '状态[0新建，1已分配，2正在采购，3已完成，4采购失败]',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of wms_purchase_detail
--- ----------------------------
-INSERT INTO `wms_purchase_detail` VALUES (13, 2, 1, 10, NULL, 1, 3);
-INSERT INTO `wms_purchase_detail` VALUES (14, 2, 2, 20, NULL, 2, 4);
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for wms_ware_info
@@ -73,12 +79,6 @@ CREATE TABLE `wms_ware_info`  (
   `areacode` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '区域编码',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '仓库信息' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of wms_ware_info
--- ----------------------------
-INSERT INTO `wms_ware_info` VALUES (1, '1号仓库', '江苏省苏州市工业园区', '212301');
-INSERT INTO `wms_ware_info` VALUES (2, '2号仓库', '上海市大世界', '232425');
 
 -- ----------------------------
 -- Table structure for wms_ware_order_task
@@ -100,7 +100,7 @@ CREATE TABLE `wms_ware_order_task`  (
   `ware_id` bigint(20) NULL DEFAULT NULL COMMENT '仓库id',
   `task_comment` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '工作单备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '库存工作单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '库存工作单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for wms_ware_order_task_detail
@@ -112,8 +112,10 @@ CREATE TABLE `wms_ware_order_task_detail`  (
   `sku_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'sku_name',
   `sku_num` int(11) NULL DEFAULT NULL COMMENT '购买个数',
   `task_id` bigint(20) NULL DEFAULT NULL COMMENT '工作单id',
+  `ware_id` bigint(20) NULL DEFAULT NULL COMMENT '仓库id',
+  `lock_status` int(1) NULL DEFAULT NULL COMMENT '1-已锁定 2-已解锁 3-已扣减',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '库存工作单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '库存工作单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for wms_ware_sku
@@ -127,11 +129,6 @@ CREATE TABLE `wms_ware_sku`  (
   `sku_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'sku_name',
   `stock_locked` int(11) NULL DEFAULT NULL COMMENT '锁定库存',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '商品库存' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of wms_ware_sku
--- ----------------------------
-INSERT INTO `wms_ware_sku` VALUES (1, 1, 1, 10, NULL, NULL);
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '商品库存' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

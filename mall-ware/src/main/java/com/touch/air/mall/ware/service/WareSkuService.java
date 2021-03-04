@@ -1,6 +1,8 @@
 package com.touch.air.mall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.touch.air.common.to.mq.OrderTo;
+import com.touch.air.common.to.mq.StockLockedTo;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.ware.entity.WareSkuEntity;
 import com.touch.air.mall.ware.vo.SkuHasStockVo;
@@ -25,5 +27,9 @@ public interface WareSkuService extends IService<WareSkuEntity> {
     List<SkuHasStockVo> getSkusHasStock(List<Long> skuIds);
 
     Boolean orderLockStock(WareSkuLockVo wareSkuLockVo);
+
+    void unLockStock(StockLockedTo stockLockedTo);
+
+    void unLockStock(OrderTo orderTo);
 }
 

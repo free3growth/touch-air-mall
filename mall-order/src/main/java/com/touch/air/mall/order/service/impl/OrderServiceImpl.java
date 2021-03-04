@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.touch.air.common.to.mq.OrderTo;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.Query;
 import com.touch.air.common.utils.R;
@@ -25,6 +26,8 @@ import com.touch.air.mall.order.service.OrderService;
 import com.touch.air.mall.order.to.OrderCreateTo;
 import com.touch.air.mall.order.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -62,6 +65,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     private ProductFeignService productFeignService;
     @Resource
     private OrderItemService orderItemService;
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -116,7 +121,25 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return confirmVo;
     }
 
-    @Transactional
+    @Override
+    public void closeOrder(OrderEntity entity) {
+        //查询当前订单的最新状态（已付款...）
+        OrderEntity orderEntity = this.getById(entity.getId());
+        if (orderEntity.getStatus() == OrderStatusEnum.CREATE_NEW.getCode()) {
+            //关单，只有订单是代付款的状态
+            OrderEntity order = new OrderEntity();
+            order.setId(entity.getId());
+            order.setStatus(OrderStatusEnum.CANCLED.getCode());
+            this.updateById(order);
+            //关单成功，主动通知解锁库存
+            OrderTo orderTo = new OrderTo();
+            BeanUtils.copyProperties(orderEntity,orderTo);
+            rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other", orderTo);
+        }
+    }
+
+//    @GlobalTransactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public SubmitOrderResVo submitOrder(OrderSubmitVo orderSubmitVo) {
         SubmitOrderResVo submitOrderResVo = new SubmitOrderResVo();
@@ -155,22 +178,35 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
                 }).collect(Collectors.toList());
                 wareSkuLockVo.setLocks(orderItemVos);
                 //远程锁定库存
+                //存在事务问题：库存成功了，但是网络原因超时了，订单回滚，但是库存扣减了
+                //为了保证高并发，库存服务自己回滚（消息队列）：1、可以发消息给库存服务 2、库存服务自动解锁
                 R orderLock = wmsFeignService.orderLock(wareSkuLockVo);
                 if (orderLock.getCode() == 0) {
                     //锁定成功
                     submitOrderResVo.setOrderEntity(orderCreateTo.getOrderEntity());
+                    //TODO 远程扣减积分
+                    //模拟异常，全局事务回滚
+                    //int i = 10 / 0;
+                    //TODO 订单创建成功，发送消息给MQ
+                    rabbitTemplate.convertAndSend("order-event-exchange","order.create.order",orderCreateTo.getOrderEntity());
                     return submitOrderResVo;
-                }else{
+                } else {
                     //锁定失败
                     submitOrderResVo.setCode(3);
                     return submitOrderResVo;
                 }
-            }else{
+            } else {
                 //对比失败
                 submitOrderResVo.setCode(2);
                 return submitOrderResVo;
             }
         }
+    }
+
+    @Override
+    public OrderEntity getOrderByOrderSn(String orderSn) {
+        OrderEntity order_sn = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+        return order_sn;
     }
 
     /**

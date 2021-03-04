@@ -14,7 +14,6 @@ import com.touch.air.mall.order.service.OrderItemService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,7 +21,7 @@ import java.util.Map;
 
 @Slf4j
 @Service("orderItemService")
-@RabbitListener(queues = {"mall-order-1"})
+//@RabbitListener(queues = {"mall-order-1"})
 public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEntity> implements OrderItemService {
 
     @Override
