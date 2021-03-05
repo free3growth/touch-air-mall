@@ -11,7 +11,7 @@
  Target Server Version : 50731
  File Encoding         : 65001
 
- Date: 02/01/2021 13:59:50
+ Date: 05/03/2021 17:07:54
 */
 
 SET NAMES utf8mb4;
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `oms_order`;
 CREATE TABLE `oms_order`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `member_id` bigint(20) NULL DEFAULT NULL COMMENT 'member_id',
-  `order_sn` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '订单号',
+  `order_sn` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '订单号',
   `coupon_id` bigint(20) NULL DEFAULT NULL COMMENT '使用的优惠券',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT 'create_time',
   `member_username` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '用户名',
@@ -65,7 +65,7 @@ CREATE TABLE `oms_order`  (
   `comment_time` datetime(0) NULL DEFAULT NULL COMMENT '评价时间',
   `modify_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 100 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for oms_order_item
@@ -74,7 +74,7 @@ DROP TABLE IF EXISTS `oms_order_item`;
 CREATE TABLE `oms_order_item`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `order_id` bigint(20) NULL DEFAULT NULL COMMENT 'order_id',
-  `order_sn` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'order_sn',
+  `order_sn` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'order_sn',
   `spu_id` bigint(20) NULL DEFAULT NULL COMMENT 'spu_id',
   `spu_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'spu_name',
   `spu_pic` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'spu_pic',
@@ -93,7 +93,7 @@ CREATE TABLE `oms_order_item`  (
   `gift_integration` int(11) NULL DEFAULT NULL COMMENT '赠送积分',
   `gift_growth` int(11) NULL DEFAULT NULL COMMENT '赠送成长值',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单项信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 193 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单项信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for oms_order_operate_history
@@ -179,7 +179,7 @@ CREATE TABLE `oms_order_setting`  (
 DROP TABLE IF EXISTS `oms_payment_info`;
 CREATE TABLE `oms_payment_info`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `order_sn` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '订单号（对外业务号）',
+  `order_sn` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '订单号（对外业务号）',
   `order_id` bigint(20) NULL DEFAULT NULL COMMENT '订单id',
   `alipay_trade_no` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '支付宝交易流水号',
   `total_amount` decimal(18, 4) NULL DEFAULT NULL COMMENT '支付总金额',
@@ -189,8 +189,10 @@ CREATE TABLE `oms_payment_info`  (
   `confirm_time` datetime(0) NULL DEFAULT NULL COMMENT '确认时间',
   `callback_content` varchar(4000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '回调内容',
   `callback_time` datetime(0) NULL DEFAULT NULL COMMENT '回调时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付信息表' ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `order_sn`(`order_sn`) USING BTREE,
+  UNIQUE INDEX `alipay_trade_no`(`alipay_trade_no`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '支付信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for oms_refund_info
@@ -206,5 +208,23 @@ CREATE TABLE `oms_refund_info`  (
   `refund_content` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '退款信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for undo_log
+-- ----------------------------
+DROP TABLE IF EXISTS `undo_log`;
+CREATE TABLE `undo_log`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(20) NOT NULL,
+  `xid` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `context` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(11) NOT NULL,
+  `log_created` datetime(0) NOT NULL,
+  `log_modified` datetime(0) NOT NULL,
+  `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

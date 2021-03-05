@@ -1,6 +1,8 @@
 package com.touch.air.mall.order.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,6 +18,7 @@ import com.touch.air.mall.order.constant.OrderStatusEnum;
 import com.touch.air.mall.order.dao.OrderDao;
 import com.touch.air.mall.order.entity.OrderEntity;
 import com.touch.air.mall.order.entity.OrderItemEntity;
+import com.touch.air.mall.order.entity.PaymentInfoEntity;
 import com.touch.air.mall.order.feign.CartFeignService;
 import com.touch.air.mall.order.feign.MemberFeignService;
 import com.touch.air.mall.order.feign.ProductFeignService;
@@ -23,6 +26,7 @@ import com.touch.air.mall.order.feign.WmsFeignService;
 import com.touch.air.mall.order.interceptor.LoginUserInterceptor;
 import com.touch.air.mall.order.service.OrderItemService;
 import com.touch.air.mall.order.service.OrderService;
+import com.touch.air.mall.order.service.PaymentInfoService;
 import com.touch.air.mall.order.to.OrderCreateTo;
 import com.touch.air.mall.order.vo.*;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +71,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     private OrderItemService orderItemService;
     @Resource
     private RabbitTemplate rabbitTemplate;
+    @Resource
+    private PaymentInfoService paymentInfoService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -138,7 +144,69 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         }
     }
 
-//    @GlobalTransactional
+    @Override
+    public PayVo getOrderPay(String orderSn) {
+
+        PayVo payVo = new PayVo();
+        OrderEntity orderByOrderSn = this.getOrderByOrderSn(orderSn);
+        BigDecimal decimal = orderByOrderSn.getPayAmount().setScale(2, BigDecimal.ROUND_UP);
+        payVo.setTotal_amount(decimal.toString());
+        payVo.setOut_trade_no(orderByOrderSn.getOrderSn());
+        List<OrderItemEntity> orderItemEntityList = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", orderSn));
+        OrderItemEntity itemEntity = orderItemEntityList.get(0);
+        payVo.setSubject(itemEntity.getSkuName());
+        payVo.setBody(itemEntity.getSkuAttrsVals());
+        return payVo;
+    }
+
+    @Override
+    public PageUtils queryPageWithItem(Map<String, Object> params) {
+        MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
+        log.info("查询哪个用户的订单："+memberRespVo);
+        if (ObjectUtil.isNotNull(memberRespVo)) {
+            IPage<OrderEntity> page = this.page(
+                    new Query<OrderEntity>().getPage(params),
+                    new QueryWrapper<OrderEntity>().eq("member_id", memberRespVo.getId()).orderByDesc("id")
+            );
+            List<OrderEntity> records = page.getRecords();
+            if (CollUtil.isNotEmpty(records)) {
+                List<OrderEntity> collect = records.stream().map(orderEntity -> {
+                    List<OrderItemEntity> orderItemEntities = orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", orderEntity.getOrderSn()));
+                    orderEntity.setItemEntities(orderItemEntities);
+                    return orderEntity;
+                }).collect(Collectors.toList());
+                page.setRecords(collect);
+            }
+            return new PageUtils(page);
+        }
+        return null;
+    }
+
+    /**
+     * 处理支付宝支付成功的异步通知
+     * @param payAsyncVo
+     * @return
+     */
+    @Override
+    public String handlePayResult(PayAsyncVo payAsyncVo) {
+        //1、保存交易流水
+        PaymentInfoEntity paymentInfoEntity = new PaymentInfoEntity();
+        paymentInfoEntity.setAlipayTradeNo(payAsyncVo.getTrade_no());
+        paymentInfoEntity.setOrderSn(payAsyncVo.getOut_trade_no());
+        paymentInfoEntity.setPaymentStatus(payAsyncVo.getTrade_status());
+        paymentInfoEntity.setCallbackTime(DateUtil.parse(payAsyncVo.getNotify_time()));
+        paymentInfoService.save(paymentInfoEntity);
+        //2、修改订单的状态信息
+        if ((payAsyncVo.getTrade_status().equals("TRADE_SUCCESS") || payAsyncVo.getTrade_status().equals("TRADE_FINISHED"))) {
+            //支付成功
+            String orderSn = payAsyncVo.getOut_trade_no();
+            this.baseMapper.updateOrderStatus(orderSn, OrderStatusEnum.PAYED.getCode());
+        }
+        return "success";
+    }
+
+
+    //    @GlobalTransactional
     @Transactional(rollbackFor = Exception.class)
     @Override
     public SubmitOrderResVo submitOrder(OrderSubmitVo orderSubmitVo) {

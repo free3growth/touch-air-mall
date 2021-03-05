@@ -5,6 +5,13 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
+    alicloud:
+      oss:
+        endpoint: oss-cn-hangzhou.aliyuncs.com
+        bucket: touch-air-mall
+      access-key: xxx
+      secret-key: xxx
+
   alicloud:
     sms:
       host: https://gyytz.market.alicloudapi.com
@@ -12,6 +19,7 @@ spring:
       appcode: xxxxxxxx
       sms-sign-id: 2e65b1bb3d054466b82f0c9d125465e2
       template-id: a09602b817fd47e59e7c6e603d3f088d
+
 server:
   port: 30000
 

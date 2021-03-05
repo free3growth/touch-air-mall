@@ -3,9 +3,7 @@ package com.touch.air.mall.order.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.order.entity.OrderEntity;
-import com.touch.air.mall.order.vo.OrderConfirmVo;
-import com.touch.air.mall.order.vo.OrderSubmitVo;
-import com.touch.air.mall.order.vo.SubmitOrderResVo;
+import com.touch.air.mall.order.vo.*;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -32,5 +30,18 @@ public interface OrderService extends IService<OrderEntity> {
     OrderEntity getOrderByOrderSn(String orderSn);
 
     void closeOrder(OrderEntity entity);
+
+    /**
+     * 获取当前订单的支付信息
+     *
+     * @param orderSn
+     * @return
+     */
+    PayVo getOrderPay(String orderSn);
+
+    PageUtils queryPageWithItem(Map<String, Object> params);
+
+    String handlePayResult(PayAsyncVo payAsyncVo);
+
 }
 
