@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://192.168.83.133:3306/touch_air_mall_sms
+    url: jdbc:mysql://192.168.83.133:3306/touch_air_mall_sms?serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:

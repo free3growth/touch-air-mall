@@ -16,6 +16,13 @@ spring:
             - Path= /api/product/**,/hello
           filters:
             - RewritePath= /api/(?<segment>/?.*),/$\{segment}
+        - id: coupon_route
+          uri: lb://touch-air-mall-coupon
+          predicates:
+            - Path= /api/coupon/**
+          filters:
+            - RewritePath= /api/(?<segment>/?.*),/$\{segment}
+
         - id: ware_route
           uri: lb://touch-air-mall-ware
           predicates:
@@ -64,6 +71,10 @@ spring:
           uri: lb://touch-air-mall-member
           predicates:
             - Host=member.mall.com
+        - id: mall_seckill_route
+          uri: lb://touch-air-mall-seckill
+          predicates:
+            - Host=seckill.mall.com
 ## 前端项目请求都带有 /api 前缀
 ## http://localhost:9527/api/captcha.jpg  ---> http://renren-fast:8080/api/captcha.jpg
   ## 但是默认的请求是：http://localhost:8080/renren-fast/captcha.jpg  使用Gateway的Filter 重写路径

@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.83.133:8848
+
+  application:
+    name: touch-air-mall-seckill
+  # jackson时间格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
+    host: 192.168.83.133
+    virtual-host: /
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+  thymeleaf:
+    #关闭 thymeleaf 缓存
+    cache: false
+  redis:
+    host: 192.168.83.133
+    port: 6379
+  session:
+    store-type: redis
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+server:
+  port: 15000

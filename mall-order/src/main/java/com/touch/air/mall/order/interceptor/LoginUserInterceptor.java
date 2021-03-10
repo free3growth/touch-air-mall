@@ -23,13 +23,14 @@ public class LoginUserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        MemberRespVo attribute = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
         //如果是远程调用 直接放行
         boolean match = new AntPathMatcher().match("/payed/notify", request.getRequestURI());
         boolean payed = new AntPathMatcher().match("/order/order/**", request.getRequestURI());
         if (match || payed) {
+            loginUser.set(attribute);
             return true;
         }
-        MemberRespVo attribute = (MemberRespVo) request.getSession().getAttribute(AuthServerConstant.LOGIN_USER);
         log.info("共享的用户信息：" + attribute);
         if (ObjectUtil.isNotNull(attribute)) {
             //同一个线程 threadLocal 共享数据

@@ -1,6 +1,7 @@
 package com.touch.air.mall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.touch.air.common.to.mq.SeckillOrderTo;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.mall.order.entity.OrderEntity;
 import com.touch.air.mall.order.vo.*;
@@ -43,5 +44,6 @@ public interface OrderService extends IService<OrderEntity> {
 
     String handlePayResult(PayAsyncVo payAsyncVo);
 
+    void createSeckillOrder(SeckillOrderTo seckillOrderTo);
 }
 

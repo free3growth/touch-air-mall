@@ -32,6 +32,7 @@
         <module>mall-test-sso-client</module>
         <module>mall-test-sso-client2</module>
         <module>mall-cart</module>
+        <module>mall-seckill</module>
     </modules>
 
     <!--统一管理jar包和版本-->

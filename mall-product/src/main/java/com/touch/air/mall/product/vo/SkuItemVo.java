@@ -43,6 +43,8 @@ public class SkuItemVo {
      * 默认有货
      */
     private boolean hasStock = true;
-
-
+    /**
+     * 秒杀活动信息
+     */
+    private SeckillInfoVo seckillInfoVo;
 }

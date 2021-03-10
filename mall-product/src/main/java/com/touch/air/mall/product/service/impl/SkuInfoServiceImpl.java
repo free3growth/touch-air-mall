@@ -1,16 +1,20 @@
 package com.touch.air.mall.product.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.touch.air.common.utils.PageUtils;
 import com.touch.air.common.utils.Query;
+import com.touch.air.common.utils.R;
 import com.touch.air.mall.product.dao.SkuInfoDao;
 import com.touch.air.mall.product.entity.SkuImagesEntity;
 import com.touch.air.mall.product.entity.SkuInfoEntity;
 import com.touch.air.mall.product.entity.SpuInfoDescEntity;
+import com.touch.air.mall.product.feign.SeckillFeignService;
 import com.touch.air.mall.product.service.*;
+import com.touch.air.mall.product.vo.SeckillInfoVo;
 import com.touch.air.mall.product.vo.SkuItemSaleAttrVo;
 import com.touch.air.mall.product.vo.SkuItemVo;
 import com.touch.air.mall.product.vo.SpuItemGroupAttrVo;
@@ -39,6 +43,9 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
     @Resource
     private SkuSaleAttrValueService skuSaleAttrValueService;
+
+    @Resource
+    private SeckillFeignService seckillFeignService;
 
     @Resource
     private ThreadPoolExecutor executor;
@@ -143,9 +150,18 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             skuItemVo.setSkuImagesEntityList(skuImagesEntityList);
         }, executor);
 
+        CompletableFuture<Void> seckillFuture = CompletableFuture.runAsync(() -> {
+            //3、查询当前sku是否参与秒优惠
+            R skuSeckillInfo = seckillFeignService.getSkuSeckillInfo(skuId);
+            if (skuSeckillInfo.getCode() == 0) {
+                SeckillInfoVo seckillInfoVo = skuSeckillInfo.getData(new TypeReference<SeckillInfoVo>() {
+                });
+                skuItemVo.setSeckillInfoVo(seckillInfoVo);
+            }
+        }, executor);
         //等待所有任务都完成，才可以返回
         try {
-            CompletableFuture.allOf(saleAttrFuture, descFuture, groupAttrFuture, imageFuture).get();
+            CompletableFuture.allOf(saleAttrFuture, descFuture, groupAttrFuture, imageFuture,seckillFuture).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

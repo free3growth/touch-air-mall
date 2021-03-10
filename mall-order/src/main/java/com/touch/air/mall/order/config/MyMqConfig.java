@@ -70,6 +70,23 @@ public class MyMqConfig {
                 null);
     }
 
+    /**
+     * 秒杀成功后，下单队列
+     * @return
+     */
+    @Bean
+    public Queue orderSeckillOrderQueue(){
+        return new Queue("order.seckill.order.queue",true,false, false);
+    }
+    @Bean
+    public Binding orderSeckillOrderBinding(){
+        return new Binding("order.seckill.order.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.seckill.order",
+                null);
+    }
+
 //    @RabbitListener(queues = "order.release.order.queue")
 //    public void listener(OrderEntity entity, Channel channel, Message message) throws IOException {
 //        log.info("收到过期的订单信息，准备关闭订单：" + entity.getOrderSn());
