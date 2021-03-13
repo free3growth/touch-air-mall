@@ -8,8 +8,19 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
   application:
     name: touch-air-mall-member
+  zipkin:
+    base-url: http://192.168.83.133:9411/
+    discovery-client-enabled: false
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
@@ -40,3 +51,13 @@ ribbon:
   ReadTimeout: 5000
   # 指的是建立连接后从服务器读取到可用资源所用的时间
   ConnectTimeout: 5000
+
+#actuator统计审计信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+feign:
+  sentinel:
+    enabled: true

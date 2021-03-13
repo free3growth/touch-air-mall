@@ -3,8 +3,19 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
   application:
     name: touch-air-mall-auth-server
+  zipkin:
+    base-url: http://192.168.83.133:9411/
+    discovery-client-enabled: false
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1
   thymeleaf:
     cache: false
   redis:
@@ -17,3 +28,14 @@ server:
   servlet:
     session:
       timeout: 30m
+
+#actuator统计审计信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true

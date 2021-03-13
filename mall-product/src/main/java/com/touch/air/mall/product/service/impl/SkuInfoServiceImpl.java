@@ -164,8 +164,10 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             CompletableFuture.allOf(saleAttrFuture, descFuture, groupAttrFuture, imageFuture,seckillFuture).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return null;
         } catch (ExecutionException e) {
             e.printStackTrace();
+            return null;
         }
         return skuItemVo;
     }

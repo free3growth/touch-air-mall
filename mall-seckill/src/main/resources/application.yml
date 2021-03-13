@@ -3,9 +3,20 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
-
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8080
   application:
     name: touch-air-mall-seckill
+  zipkin:
+    base-url: http://192.168.83.133:9411/
+    discovery-client-enabled: false
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
@@ -38,3 +49,13 @@ mybatis-plus:
       id-type: auto
 server:
   port: 15000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true
+

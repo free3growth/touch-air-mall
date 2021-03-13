@@ -29,7 +29,10 @@ public enum BizCodeEnum {
     PHONE_EXIST_EXCEPTION(15002, "手机号已经存在"),
     ACCOUNT_PASSWORD_EXCEPTION(15003, "账号或密码错误"),
     NO_STOCK_EXCEPTION(16000, "商品库存不足"),
-    PRODUCT_UP_EXCEPTION(11000,"商品上架异常");
+    PRODUCT_UP_EXCEPTION(11000,"商品上架异常"),
+    TO_MANY_REQUEST(17001,"请求次数过多"),
+    SENTINEL_FLOW_EXCEPTION(17000,"流控异常");
+
 
     private int code;
     private String msg;

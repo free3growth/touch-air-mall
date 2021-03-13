@@ -5,6 +5,9 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
     alicloud:
       oss:
         endpoint: oss-cn-hangzhou.aliyuncs.com
@@ -23,3 +26,9 @@ spring:
 server:
   port: 30000
 
+#actuator统计审计信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

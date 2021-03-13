@@ -8,9 +8,19 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.83.133:8848
-
+    sentinel:
+      transport:
+        dashboard: localhost:8080
   application:
     name: touch-air-mall-order
+  zipkin:
+    base-url: http://192.168.83.133:9411/
+    discovery-client-enabled: false
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1
   # jackson时间格式化
   jackson:
     time-zone: GMT+8
@@ -60,3 +70,14 @@ seata:
       default: localhost:8091
     enable-degrade: false
   application-id: ${spring.application.name}
+
+#actuator统计审计信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true
