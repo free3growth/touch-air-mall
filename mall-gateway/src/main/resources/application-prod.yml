@@ -1,0 +1,101 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: mall-nacos-service.touch-air-mall:8848
+    sentinel:
+      transport:
+        dashboard: mall-sentinel-service:8858
+    gateway:
+      routes:
+#        - id: test_route
+#          uri: https://www.baidu.com
+#          predicates:
+#            - Query=url,baidu
+#        - id: qq_route
+#          uri: https://www.qq.com
+#          predicates:
+#            - Query=url,qq
+        - id: product_route
+          uri: lb://touch-air-mall-product
+          predicates:
+            - Path= /api/product/**,/hello
+          filters:
+            - RewritePath= /api/(?<segment>/?.*),/$\{segment}
+        - id: coupon_route
+          uri: lb://touch-air-mall-coupon
+          predicates:
+            - Path= /api/coupon/**
+          filters:
+            - RewritePath= /api/(?<segment>/?.*),/$\{segment}
+
+        - id: ware_route
+          uri: lb://touch-air-mall-ware
+          predicates:
+            - Path= /api/ware/**
+          filters:
+            - RewritePath= /api/(?<segment>/?.*),/$\{segment}
+        - id: third_part_route
+          uri: lb://touch-air-mall-third-part
+          predicates:
+            - Path= /api/thirdpart/**
+          filters:
+            - RewritePath= /api/thirdpart/(?<segment>/?.*),/$\{segment}
+        - id: member_route
+          uri: lb://touch-air-mall-member
+          predicates:
+            - Path= /api/member/**
+          filters:
+            - RewritePath= /api/(?<segment>/?.*),/$\{segment}
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            - Path= /api/**
+          filters:
+            - RewritePath= /api/(?<segment>/?.*),/renren-fast/$\{segment}
+        - id: mall_host_route
+          uri: lb://touch-air-mall-product
+          predicates:
+            - Host=mall.com,item.mall.com
+        - id: mall_search_route
+          uri: lb://touch-air-mall-search
+          predicates:
+            - Host=search.mall.com
+        - id: mall_auth_route
+          uri: lb://touch-air-mall-auth-server
+          predicates:
+            - Host=auth.mall.com
+        - id: mall_cart_route
+          uri: lb://touch-air-mall-cart
+          predicates:
+            - Host=cart.mall.com
+        - id: mall_order_route
+          uri: lb://touch-air-mall-order
+          predicates:
+            - Host=order.mall.com
+        - id: mall_member_route
+          uri: lb://touch-air-mall-member
+          predicates:
+            - Host=member.mall.com
+        - id: mall_seckill_route
+          uri: lb://touch-air-mall-seckill
+          predicates:
+            - Host=seckill.mall.com
+## 前端项目请求都带有 /api 前缀
+## http://localhost:9527/api/captcha.jpg  ---> http://renren-fast:8080/api/captcha.jpg
+  ## 但是默认的请求是：http://localhost:8080/renren-fast/captcha.jpg  使用Gateway的Filter 重写路径
+  application:
+    name: touch-air-mall-gateway
+server:
+  port: 8080
+
+#actuator统计审计信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+feign:
+  sentinel:
+    enabled: true

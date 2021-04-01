@@ -1,0 +1,65 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mall-auth-server
+  namespace: touch-air-mall
+  labels:
+    app: mall-auth-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mall-auth-server
+  template:
+    metadata:
+      labels:
+        app: mall-auth-server
+    spec:
+      containers:
+        - name: mall-auth-server
+          image: $REGISTRY/$DOCKERHUB_NAMESPACE/$PROJECT_NAME:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 10m
+              memory: 10Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mall-auth-server
+  namespace: touch-air-mall
+  labels:
+    app: mall-auth-server
+  annotations:
+    kubesphere.io/alias-name: 认证服务
+    kubesphere.io/serviceType: statelessservice
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30001
+  selector:
+    app: mall-auth-server
+  type: NodePort
+  sessionAffinity: None

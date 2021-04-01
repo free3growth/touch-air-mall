@@ -38,3 +38,5 @@ management:
 feign:
   sentinel:
     enabled: true
+elasticsearch:
+  host: 192.168.83.133

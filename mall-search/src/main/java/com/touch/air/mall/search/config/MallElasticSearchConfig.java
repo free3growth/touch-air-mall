@@ -4,6 +4,7 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,10 +30,11 @@ public class MallElasticSearchConfig {
     }
 
     @Bean
-    public RestHighLevelClient esRestClient() {
+    public RestHighLevelClient esRestClient(@Value("${elasticsearch.host}") String esUrl) {
         RestHighLevelClient client = new RestHighLevelClient(
                 RestClient.builder(
-                        new HttpHost("192.168.83.133", 9200, "http")));
+                        new HttpHost(esUrl, 9200, "http")));
+//                        new HttpHost("192.168.83.133", 9200, "http")));
         return client;
     }
 }

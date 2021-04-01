@@ -1,5 +1,8 @@
 spring:
   cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.83.133:8848
     sentinel:
       transport:
         dashboard: localhost:8080

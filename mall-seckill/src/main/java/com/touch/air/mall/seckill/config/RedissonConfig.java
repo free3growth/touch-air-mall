@@ -3,6 +3,7 @@ package com.touch.air.mall.seckill.config;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,10 +22,10 @@ public class RedissonConfig {
      * @throws IOException
      */
     @Bean(destroyMethod="shutdown")
-    RedissonClient redisson() throws IOException {
+    RedissonClient redisson(@Value("${spring.redis.host}") String redisUrl) throws IOException {
         //1、创建配置
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://192.168.83.133:6379");
+        config.useSingleServer().setAddress("redis://"+redisUrl+":6379");
         //、根据Config 创建出RedissonClient实例
         RedissonClient redissonClient = Redisson.create(config);
         return redissonClient;
