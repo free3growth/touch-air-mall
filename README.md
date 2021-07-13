@@ -130,23 +130,23 @@ touch-air-mall
   
 #### 商品详情
 * 商品详情
-   ![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/260e69afd02047b48167e2f6ef8284bd~tplv-k3u1fbpfcp-watermark.image)
+  ![商品详情页.gif](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/14a04a73e52842b8ab4c837eafa6b183~tplv-k3u1fbpfcp-watermark.image)
    
 #### 社交登录
 * 社交登录
-   ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/88453e9c415741cbaa27be299b4967aa~tplv-k3u1fbpfcp-watermark.image)
+   ![第三方登录回显效果演示.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/786442a263c746ed9f9f5f91457e3fde~tplv-k3u1fbpfcp-watermark.image)
 #### 单点登录
 * 单点登录效果演示
-   ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ddd8405aae749e59fb5cf6fc4517dba~tplv-k3u1fbpfcp-watermark.image)
+  ![单点登录效果演示.gif](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7ae5fcc1e911468d97f75d8731031100~tplv-k3u1fbpfcp-watermark.image)
 #### 购物车
 * 购物车效果演示
-  ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/010ed0acd9f849a39527213f55a83537~tplv-k3u1fbpfcp-watermark.image)
+  ![购物车效果演示.gif](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5a798e083da64525919cbada6aaec861~tplv-k3u1fbpfcp-watermark.image)
 #### 订单业务
 * 订单创建、验证令牌、验价、锁定库存
-  ![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/68f8fbec6ff146ef9fc916aa4bd4347e~tplv-k3u1fbpfcp-watermark.image)
+  ![订单确认、下单效果演示.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/796134021af3462bbef3d22c627546de~tplv-k3u1fbpfcp-watermark.image)
 #### 分布式事务
 * 可靠消息模式
-  ![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/897982efd9b64651b0f256c9325fd480~tplv-k3u1fbpfcp-watermark.image)
+  ![可靠消息（最终一致性）效果演示.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a32bc7ee0a74101a2be1c895a74a3fe~tplv-k3u1fbpfcp-watermark.image)
 #### 支付
 * 沙箱环境演示：
     * 提交订单，等待一分钟不支付，消息过期，关闭订单，解锁库存
@@ -156,16 +156,18 @@ touch-air-mall
     * 提交订单立马支付，支付成功，异步通知
 
         *  预期结果：订单状态：已付款，库存锁定
-
-  ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ea9edc4aad2412ba1e5757c6cb7726e~tplv-k3u1fbpfcp-watermark.image)
+   ![订单支付效果演示.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f81509265dbe43aca7846505e9e61c66~tplv-k3u1fbpfcp-watermark.image)
 #### 秒杀服务
 * 商品秒杀演示：校验合法性、信号量扣减、幂等性设置、MQ削峰
-  ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e2eaf024eeae44a98f993d57c364b895~tplv-k3u1fbpfcp-watermark.image)
+  ![商品秒杀效果演示.gif](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/53fd964b42b042a6bfe55a07c21c71a3~tplv-k3u1fbpfcp-watermark.image)
 #### Sleuth+Zipkin服务链路追踪
 * 效果演示
   ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9815ecf8001409a802b31542e6e3849~tplv-k3u1fbpfcp-watermark.image)
   ![image.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/617680b73ef346e9aaba179d14461a17~tplv-k3u1fbpfcp-watermark.image)
   ![image.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7932f27ea7054066986a7df497c4dd18~tplv-k3u1fbpfcp-watermark.image)
+#### 流水线构建微服务
+* 流水线演示
+  ![流水线构建微服务.gif](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6f5e5a4dc79c4d3fa4058ce1d318f487~tplv-k3u1fbpfcp-watermark.image)
 ## 技术选型
 
 ### 后端技术
